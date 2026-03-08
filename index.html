@@ -1,38 +1,777 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>My Portfolio</title>
-<style>
-body{
-    font-family: monospace;
-    background:#111;
-    color:#eee;
-    text-align:center;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>speedskater1610 — Developer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0a0c0f;
+      --bg2:       #0e1115;
+      --bg3:       #13171e;
+      --border:    #1e2530;
+      --green:     #39ff8f;
+      --green-dim: #1a7a45;
+      --cyan:      #00e5ff;
+      --orange:    #ff6b35;
+      --text:      #d4dde8;
+      --muted:     #5a6a7e;
+      --white:     #f0f4f8;
+    }
 
-a{
-    color:#7df;
-}
-</style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(10,12,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.1rem;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--muted); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 2.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+      opacity: 0.4;
+    }
+    .hero-glow {
+      position: absolute; top: 20%; left: 40%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(57,255,143,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; max-width: 800px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--green); font-size: 0.75rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-tag::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--green);
+    }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.0;
+      color: var(--white);
+      letter-spacing: -2px;
+      margin-bottom: 1rem;
+    }
+    h1 .accent { color: var(--green); }
+    .hero-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 480px; margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; font-weight: 600;
+      text-decoration: none;
+      border: 1px solid;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--green); color: var(--bg);
+      border-color: var(--green);
+    }
+    .btn-primary:hover {
+      background: transparent; color: var(--green);
+      box-shadow: 0 0 20px rgba(57,255,143,0.3);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── GITHUB STATS CARD ── */
+    .stats-card {
+      position: absolute; right: 2.5rem; top: 50%;
+      transform: translateY(-50%);
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .stats-card img {
+      display: block; max-width: 380px; width: 100%;
+      filter: brightness(1.05);
+    }
+    .stats-card-label {
+      font-size: 0.65rem; color: var(--muted);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    section {
+      padding: 5rem 2.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-full {
+      max-width: 100%;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .section-full > .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem;
+    }
+
+    .section-header {
+      display: flex; align-items: baseline; gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+    .section-num {
+      font-size: 0.7rem; color: var(--green);
+      letter-spacing: 0.2em;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800; color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .section-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ── ABOUT GRID ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .about-card {
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      background: var(--bg3);
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .about-card:hover { border-color: var(--green-dim); }
+    .about-card-title {
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--green);
+      margin-bottom: 1rem;
+    }
+    .about-card p {
+      color: var(--text); line-height: 1.8;
+    }
+    .about-card a {
+      color: var(--cyan); text-decoration: none;
+    }
+    .about-card a:hover { text-decoration: underline; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .tag {
+      padding: 0.2rem 0.7rem;
+      border: 1px solid var(--border);
+      font-size: 0.72rem; color: var(--muted);
+      background: var(--bg);
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      padding: 1.8rem;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .project-card:hover { border-color: var(--green-dim); transform: translateY(-2px); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 1rem;
+    }
+    .project-icon { font-size: 1.4rem; }
+    .project-link {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.8rem; transition: color 0.2s;
+    }
+    .project-link:hover { color: var(--green); }
+    .project-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      color: var(--white); margin-bottom: 0.6rem;
+    }
+    .project-desc {
+      color: var(--muted); font-size: 0.82rem;
+      line-height: 1.7; margin-bottom: 1.2rem;
+    }
+    /* Editable placeholder styles */
+    [contenteditable] {
+      outline: none;
+      border-radius: 2px;
+    }
+    [contenteditable]:focus {
+      background: rgba(57,255,143,0.05);
+      outline: 1px dashed var(--green-dim);
+    }
+    [contenteditable]:empty::before {
+      content: attr(data-placeholder);
+      color: var(--muted);
+      opacity: 0.5;
+    }
+    .edit-hint {
+      font-size: 0.65rem; color: var(--green-dim);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .project-card:hover .edit-hint,
+    .about-card:hover .edit-hint { opacity: 1; }
+
+    /* ── OPEN SOURCE ── */
+    .oss-list { display: flex; flex-direction: column; gap: 1rem; }
+    .oss-item {
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      padding: 1.4rem 1.8rem;
+      display: flex; align-items: center; gap: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .oss-item:hover { border-color: var(--green-dim); }
+    .oss-dot {
+      width: 8px; height: 8px;
+      background: var(--green); border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--green);
+    }
+    .oss-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; color: var(--white); min-width: 160px;
+    }
+    .oss-desc { color: var(--muted); font-size: 0.82rem; flex: 1; }
+    .oss-link {
+      color: var(--cyan); text-decoration: none;
+      font-size: 0.75rem; white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .oss-link:hover { color: var(--green); }
+
+    /* ── JOURNEY TIMELINE ── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 2.5rem; padding-left: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: -2rem; top: 0.4rem;
+      width: 9px; height: 9px;
+      background: var(--green); border-radius: 50%;
+      box-shadow: 0 0 10px var(--green);
+    }
+    .timeline-date {
+      font-size: 0.7rem; color: var(--green);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .timeline-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; color: var(--white);
+      font-size: 1rem; margin-bottom: 0.4rem;
+    }
+    .timeline-body { color: var(--muted); font-size: 0.82rem; line-height: 1.7; }
+
+    /* ── SKILLS BAR ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.8rem;
+    }
+    .skill-chip {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      font-size: 0.8rem; color: var(--text);
+      transition: all 0.2s;
+    }
+    .skill-chip:hover {
+      border-color: var(--green-dim); color: var(--green);
+    }
+    .skill-chip .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+      align-items: start;
+    }
+    .contact-info p { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.8; }
+    .contact-links { display: flex; flex-direction: column; gap: 0.8rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      text-decoration: none; color: var(--text);
+      transition: all 0.2s;
+    }
+    .contact-link:hover { border-color: var(--green); color: var(--green); }
+    .contact-link-icon { font-size: 1.1rem; }
+    .contact-link-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .contact-link-val { font-size: 0.82rem; color: var(--muted); }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .form-input, .form-textarea {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; padding: 0.75rem 1rem;
+      transition: border-color 0.2s; resize: none;
+    }
+    .form-input:focus, .form-textarea:focus {
+      outline: none; border-color: var(--green);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.75rem;
+    }
+    footer a { color: var(--green); text-decoration: none; }
+
+    /* ── TERMINAL BLINK ── */
+    .blink {
+      display: inline-block;
+      width: 2px; height: 1em;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom; margin-left: 2px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── FADE IN ── */
+    .fade-in {
+      opacity: 0; transform: translateY(18px);
+      animation: fadeUp 0.6s forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: none; } }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats-card { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { gap: 1rem; }
+      #hero { padding: 7rem 1.2rem 3rem; }
+      section { padding: 4rem 1.2rem; }
+      h1 { letter-spacing: -1px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Hello, I'm Russel</h1>
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#hero">speed<span>skater</span>1610</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#oss">OSS</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-<p>I build weird computers and write low level code.</p>
+<!-- ── HERO ── -->
+<div id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag fade-in">available for collaboration</div>
+    <h1 class="fade-in delay-1">
+      Building<br/>
+      cool <span class="accent">stuff.</span>
+    </h1>
+    <p class="hero-sub fade-in delay-2">
+      Developer &amp; open source contributor.
+      I write code, break things, and learn fast.<span class="blink"></span>
+    </p>
+    <div class="hero-btns fade-in delay-3">
+      <a class="btn btn-primary" href="https://github.com/speedskater1610" target="_blank" rel="noopener">
+        ↗ GitHub Profile
+      </a>
+      <a class="btn btn-ghost" href="#projects">View Projects</a>
+    </div>
+  </div>
 
-<h2>Projects</h2>
+  <!-- GitHub Stats Card -->
+  <div class="stats-card fade-in delay-4">
+    <div class="stats-card-label">// github stats</div>
+    <img
+      src="https://github-readme-stats-umber.vercel.app/api?username=speedskater1610&show_icons=true&theme=dark"
+      alt="speedskater1610 GitHub Stats"
+    />
+  </div>
+</div>
 
-<ul>
-<li>Arduino Snake Game</li>
-<li>Logic Gate CPU</li>
-<li>Custom Programming Language</li>
-</ul>
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>About Me</h2>
+    <div class="section-line"></div>
+  </div>
 
-<h2>Links</h2>
+  <div class="about-grid">
+    <div class="about-card">
+      <div class="about-card-title">// who i am</div>
+      <div class="edit-hint">✎ click to edit</div>
+      <p contenteditable="true">
+        Hey! I'm Russel Einsla — a passionate young developer who loves messing around with my arch/neovim config, tinking with robotics, some sort of low level programming, or writing compilers.
+      </p>
+    </div>
 
-<a href="https://github.com/YOURUSERNAME">GitHub</a>
+    <div class="about-card">
+      <div class="about-card-title">// schools &amp; clubs</div>
+      <div class="edit-hint">✎ click to edit</div>
+      <p contenteditable="true">
+        I go to spring-ford Highschool, participate in VexV5 robotics, german club, and participate in competeive programming.
+      </p>
+      <div class="tag-list">
+        <span class="tag" contenteditable="true">VexV5 Robotics</span>
+        <span class="tag" contenteditable="true">German club</span>
+        <span class="tag" contenteditable="true">Competeive programming</span>
+        <!-- <span class="tag" contenteditable="true">+ Add Club</span> -->
+      </div>
+    </div>
+
+    <div class="about-card">
+      <div class="about-card-title">// tech stack</div>
+      <div class="skills-grid" style="margin-top:0.5rem">
+        <div class="skill-chip"><span class="dot"></span>C</div>
+        <div class="skill-chip"><span class="dot"></span>Zig</div>
+        <div class="skill-chip"><span class="dot"></span>Rust</div>
+        <div class="skill-chip"><span class="dot"></span>Git / GitHub</div>
+        <div class="skill-chip"><span class="dot"></span>Haskell</div>
+        <div class="skill-chip"><span class="dot"></span>Linux / CLI</div>
+      </div>
+    </div>
+
+    <div class="about-card">
+      <div class="about-card-title">// find me</div>
+      <p>
+        I'm most active on GitHub — that's where all my projects live.<br/><br/>
+        <a href="https://github.com/speedskater1610" target="_blank" rel="noopener">github.com/speedskater1610 ↗</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<div class="section-full" id="projects">
+  <div class="inner">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Projects</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- Project Card 1 -->
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">🔧</span>
+          <a class="project-link" href="https://github.com/speedskater1610/craw" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="edit-hint">A compiler and assembler CLI for targeting ia32/x86 on linux</div>
+        <div class="project-name" contenteditable="true" data-placeholder="Project Name">Craw</div>
+        <div class="project-desc" contenteditable="true" data-placeholder="Describe what this project does, why you built it, and what you learned...">
+          This project embodies what I love most about programming, interesting things that I can deep dive into a rabbit hole and learn a lot, while also building something that I didn't even think was possible before.
+        </div>
+        <div class="tag-list">
+          <span class="tag" contenteditable="true">C / C++ / Rust / x86 assembly</span>
+          <span class="tag" contenteditable="true">CLI</span>
+        </div>
+      </div>
+
+      <!-- Project Card 2 -->
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">⚡</span>
+          <a class="project-link" href="https://github.com/speedskater1610/rawcasting-engine-in-C" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="edit-hint">A raycasting engine, written in C</div>
+        <div class="project-name" contenteditable="true" data-placeholder="Project Name">Raycasting engine</div>
+        <div class="project-desc" contenteditable="true" data-placeholder="Describe what this project does...">
+          This project taught me that I hate working with graphics and suck at trying to render things, while teaching me a lot about how different types of optimizations work.
+        </div>
+        <div class="tag-list">
+          <span class="tag" contenteditable="true">C</span>
+          <span class="tag" contenteditable="true">Graphics</span>
+        </div>
+      </div>
+<!--
+      Project Card 3 (Comment)
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-icon">🚀</span>
+          <a class="project-link" href="https://github.com/speedskater1610" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <div class="edit-hint">✎ click name / description to edit</div>
+        <div class="project-name" contenteditable="true" data-placeholder="Project Name">Project Three</div>
+        <div class="project-desc" contenteditable="true" data-placeholder="Describe what this project does...">
+          Your third featured project goes here. Click the text to edit and replace it with a real description.
+        </div>
+        <div class="tag-list">
+          <span class="tag" contenteditable="true">HTML</span>
+          <span class="tag" contenteditable="true">CSS</span>
+        </div>
+      </div>
+-->
+    </div>
+  </div>
+</div>
+
+<!-- ── OPEN SOURCE ── -->
+<section id="oss">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Open Source Contributions</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="oss-list">
+    <div class="oss-item">
+      <div class="oss-dot"></div>
+      <div class="oss-name" contenteditable="true">Repo / Project</div>
+      <div class="oss-desc" contenteditable="true" data-placeholder="Describe what you contributed...">
+        Describe the contribution — bug fix, new feature, documentation, etc.
+      </div>
+      <a class="oss-link" href="https://github.com/speedskater1610" target="_blank">view PR ↗</a>
+    </div>
+    <div class="oss-item">
+      <div class="oss-dot"></div>
+      <div class="oss-name" contenteditable="true">Repo / Project</div>
+      <div class="oss-desc" contenteditable="true" data-placeholder="Describe what you contributed...">
+        Another open source contribution you made — replace this with the real details.
+      </div>
+      <a class="oss-link" href="https://github.com/speedskater1610" target="_blank">view PR ↗</a>
+    </div>
+    <div class="oss-item">
+      <div class="oss-dot"></div>
+      <div class="oss-name" contenteditable="true">Repo / Project</div>
+      <div class="oss-desc" contenteditable="true" data-placeholder="Describe what you contributed...">
+        Add more rows as needed. Click any text to edit it.
+      </div>
+      <a class="oss-link" href="https://github.com/speedskater1610" target="_blank">view PR ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── JOURNEY ── -->
+<div class="section-full" id="journey">
+  <div class="inner">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Programming Journey</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-date" contenteditable="true">2022 — The Beginning</div>
+        <div class="timeline-title" contenteditable="true">First Line of Code</div>
+        <div class="timeline-body" contenteditable="true">
+          How did you get started? What was the first language you learned? What made you want to code? Tell that story here.
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date" contenteditable="true">2023 — Building Things</div>
+        <div class="timeline-title" contenteditable="true">First Real Project</div>
+        <div class="timeline-body" contenteditable="true">
+          Describe when you built your first "real" project — something you were proud of. What changed in how you thought about code?
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date" contenteditable="true">2024 — Going Deeper</div>
+        <div class="timeline-title" contenteditable="true">Exploring Open Source</div>
+        <div class="timeline-body" contenteditable="true">
+          When did you start contributing to open source? Or learning a new language / framework? What challenges did you hit?
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date" contenteditable="true">2025 — Present</div>
+        <div class="timeline-title" contenteditable="true">Where I Am Now</div>
+        <div class="timeline-body" contenteditable="true">
+          What are you working on now? What are you learning? What are you excited about?
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Contact</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p contenteditable="true">
+        Got a project idea, want to collaborate, or just want to say hi? I'm always open to interesting conversations. Reach out through any of these channels.
+      </p>
+      <div class="contact-links">
+        <a class="contact-link" href="https://github.com/speedskater1610" target="_blank" rel="noopener">
+          <span class="contact-link-icon">⚙</span>
+          <div>
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-val">github.com/speedskater1610</div>
+          </div>
+        </a>
+        <a class="contact-link" href="mailto:your@email.com">
+          <span class="contact-link-icon">✉</span>
+          <div>
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val" contenteditable="true">your@email.com</div>
+          </div>
+        </a>
+        <a class="contact-link" href="#" contenteditable="false">
+          <span class="contact-link-icon">💬</span>
+          <div>
+            <div class="contact-link-label">Discord / Other</div>
+            <div class="contact-link-val" contenteditable="true">Add your handle here</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-input" type="text" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="your@email.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" rows="5" placeholder="Say something..."></textarea>
+      </div>
+      <a class="btn btn-primary" href="mailto:your@email.com" style="align-self:flex-start">Send Message ↗</a>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:-0.3rem">
+        (Update the mailto link above with your real email)
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>Built by <a href="https://github.com/speedskater1610" target="_blank">speedskater1610</a> — open on GitHub</p>
+</footer>
 
 </body>
 </html>
